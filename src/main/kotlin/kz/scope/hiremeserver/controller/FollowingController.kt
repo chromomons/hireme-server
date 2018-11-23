@@ -247,7 +247,7 @@ class FollowingController {
         } else throw ResourceNotFoundException("Company", "company_id", company_id)
     }
 
-    @GetMapping("/{company_id}/is-following")
+    @GetMapping("/{company_id}/is-following-company")
     @PreAuthorize("hasRole('USER')")
     fun isFollowingCompany(@CurrentUser currentUser: UserPrincipal,
                            @PathVariable(value = "company_id") company_id: Long): Boolean {

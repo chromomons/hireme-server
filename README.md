@@ -170,7 +170,7 @@ PostForm = {
 | DELETE | `/{username}/unfollow`           | PathVariable: <br>`{username}`                                   | `{success, message, id}`   |    Yes    |
 | DELETE | `/{company_id}/unfollow-company` | PathVariable: <br>`{company_id}`                                 | `{success, message, id}`   |    Yes    |
 |   GET  | `/{username}/is-following`       | PathVariable: <br>`{username}`                                   | _Boolean_                  |    Yes    |
-|   GET  | `/{company_id}/is-following`     | PathVariable: <br>`{company_id}`                                 | _Boolean_                  |    Yes    |
+|   GET  | `/{company_id}/is-following-company`     | PathVariable: <br>`{company_id}`                                 | _Boolean_                  |    Yes    |
 
 Used only in response
 ```js
