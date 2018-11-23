@@ -246,4 +246,57 @@ class FollowingController {
 
         } else throw ResourceNotFoundException("Company", "company_id", company_id)
     }
+
+    @GetMapping("/{company_id}/is-following")
+    @PreAuthorize("hasRole('USER')")
+    fun isFollowingCompany(@CurrentUser currentUser: UserPrincipal,
+                           @PathVariable(value = "company_id") company_id: Long): Boolean {
+        // getting current user of class User
+        val currentUserId = currentUser.id
+        val currentUserOptional = userRepository.findById(currentUserId)
+        val currUser: User
+
+        if (currentUserOptional.isPresent) {
+            currUser = currentUserOptional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", currentUserId)
+        }
+
+        // working with the target company
+        val targetCompanyOptional = companyRepository.findById(company_id)
+        val targetCompany: Company
+
+        if (targetCompanyOptional.isPresent) {
+            targetCompany = targetCompanyOptional.get()
+
+            return currUser.followingCompanies.contains(targetCompany)
+
+        } else throw ResourceNotFoundException("Company", "company_id", company_id)
+    }
+
+    @GetMapping("/{username}/is-following")
+    @PreAuthorize("hasRole('USER')")
+    fun isFollowing(@CurrentUser currentUser: UserPrincipal,
+                    @PathVariable(value = "username") username: String): Boolean {
+        // getting current user of class User
+        val currentUserId = currentUser.id
+        val currentUserOptional = userRepository.findById(currentUserId)
+        val currUser: User
+
+        if (currentUserOptional.isPresent) {
+            currUser = currentUserOptional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", currentUserId)
+        }
+
+        // working with the target user
+        val targetUser = userRepository.findByUsername(username)
+
+        if (targetUser != null) {
+            if (targetUser.id == currUser.id) {
+                return false
+            }
+            return currUser.following.contains(targetUser)
+        } else throw ResourceNotFoundException("User", "username", username)
+    }
 }
