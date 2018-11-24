@@ -166,4 +166,26 @@ class CompanyController {
         return ResponseEntity.created(location).body(ApiResponse(true, "Company registered successfully"))
     }
 
+	@GetMapping("/my-companies")
+    @PreAuthorize("hasRole('USER')")
+    fun getMyCompanies(@CurrentUser currentUser: UserPrincipal) : List<CompanySummary> {
+        val userOptional = userRepository.findById(currentUser.id)
+        val user: User
+        val companies: MutableList<CompanySummary> = ArrayList()
+
+        if (userOptional.isPresent) {
+            user = userOptional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", currentUser.id)
+        }
+
+        for (employer in user.managing) {
+            companies.add(CompanySummary(
+                    id = employer.company.id,
+                    name = employer.company.name,
+                    description = employer.company.description))
+        }
+        return companies
+    }
+
 }
